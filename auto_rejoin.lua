@@ -37,6 +37,19 @@ local function createStatusGui()
     }
 end
 
+-- Auto-restart on rejoin
+if syn then
+    syn.queue_on_teleport([[
+        wait(5)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+    ]])
+elseif queue_on_teleport then
+    queue_on_teleport([[
+        wait(5)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+    ]])
+end
+
 -- Main rejoin function
 local function startAutoRejoin()
     local enabled = true
@@ -58,24 +71,12 @@ local function startAutoRejoin()
             
             gui.status.Text = "Rejoining..."
             pcall(function()
-                TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+                if game.JobId and #game.JobId > 0 then
+                    TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+                else
+                    TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+                end
             end)
-            
-            -- Auto-restart after teleportation
-            wait(10)  -- Wait for rejoining
-            if syn then
-                syn.queue_on_teleport([[
-                    wait(15)  -- Wait for 15 seconds after teleportation to ensure the game has reloaded
-                    loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-                ]])
-            elseif queue_on_teleport then
-                queue_on_teleport([[
-                    wait(15)  -- Wait for 15 seconds after teleportation to ensure the game has reloaded
-                    loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-                ]])
-            else
-                warn("queue_on_teleport not supported in this environment.")
-            end
         end
         wait(1)  -- Small delay before the next check to avoid blocking the script
     end
