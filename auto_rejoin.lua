@@ -37,19 +37,6 @@ local function createStatusGui()
     }
 end
 
--- Auto-restart on rejoin
-if syn then
-    syn.queue_on_teleport([[
-        wait(5)
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-    ]])
-elseif queue_on_teleport then
-    queue_on_teleport([[
-        wait(5)
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-    ]])
-end
-
 -- Main rejoin function
 local function startAutoRejoin()
     local enabled = true
@@ -80,6 +67,19 @@ local function startAutoRejoin()
         end
         wait(1)  -- Small delay before the next check to avoid blocking the script
     end
+end
+
+-- Auto-restart on rejoin
+if syn then
+    syn.queue_on_teleport([[
+        wait(5)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+    ]])
+elseif queue_on_teleport then
+    queue_on_teleport([[
+        wait(5)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+    ]])
 end
 
 -- Start the auto-rejoin process
