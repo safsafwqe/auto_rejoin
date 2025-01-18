@@ -65,12 +65,12 @@ local function startAutoRejoin()
             wait(10)  -- Wait for rejoining
             if syn then
                 syn.queue_on_teleport([[
-                    wait(10)
+                    wait(15)  -- Wait for 15 seconds after teleportation to ensure the game has reloaded
                     loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
                 ]])
             elseif queue_on_teleport then
                 queue_on_teleport([[
-                    wait(10)
+                    wait(15)  -- Wait for 15 seconds after teleportation to ensure the game has reloaded
                     loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
                 ]])
             end
