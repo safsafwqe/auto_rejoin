@@ -73,6 +73,8 @@ local function startAutoRejoin()
                     wait(15)  -- Wait for 15 seconds after teleportation to ensure the game has reloaded
                     loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
                 ]])
+            else
+                warn("queue_on_teleport not supported in this environment.")
             end
         end
         wait(1)  -- Small delay before the next check to avoid blocking the script
