@@ -63,7 +63,7 @@ local function startAutoRejoin()
             continue
         end
         
-        for i = 20, 1, -1 do
+        for i = 5, 1, -1 do
             if not enabled then break end
             gui.status.Text = "Auto Rejoin: " .. i .. "s"
             wait(1)
@@ -86,12 +86,12 @@ end
 -- Auto-restart on rejoin
 if syn then
     syn.queue_on_teleport([[
-        wait(5)
+        wait(10)
         loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
     ]])
 elseif queue_on_teleport then
     queue_on_teleport([[
-        wait(5)
+        wait(10)
         loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
     ]])
 end
