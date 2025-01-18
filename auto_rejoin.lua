@@ -57,13 +57,18 @@ local function startAutoRejoin()
             wait(15) -- Wait 15 seconds before rejoining
             
             gui.status.Text = "Rejoining..."
-            pcall(function()
+            local success, errorMessage = pcall(function()
                 if game.JobId and #game.JobId > 0 then
                     TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
                 else
                     TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
                 end
             end)
+            
+            if not success then
+                gui.status.Text = "Error: " .. errorMessage
+                wait(10) -- Wait 10 seconds before retrying
+            end
         end
         wait(1)  -- Small delay before the next check to avoid blocking the script
     end
@@ -72,12 +77,12 @@ end
 -- Auto-restart on rejoin
 if syn then
     syn.queue_on_teleport([[
-        wait(5)
+        wait(10)  -- Wait 10 seconds after rejoining to avoid rapid teleportation
         loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
     ]])
 elseif queue_on_teleport then
     queue_on_teleport([[
-        wait(5)
+        wait(10)  -- Wait 10 seconds after rejoining to avoid rapid teleportation
         loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
     ]])
 end
