@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
-local targetPlaceId = 115433517319326
 
 -- Create GUI for status and control
 local function createStatusGui()
@@ -52,49 +51,33 @@ local function startAutoRejoin()
     end)
     
     -- Auto rejoin loop
-    while wait(1) do
-        if not enabled then continue end
-        
-        local placeId = game.PlaceId
-        if placeId ~= targetPlaceId then
-            gui.status.Text = "Wrong game, teleporting..."
-            TeleportService:Teleport(targetPlaceId, Players.LocalPlayer)
-            wait(5)
-            continue
-        end
-        
-        for i = 5, 1, -1 do
-            if not enabled then break end
-            gui.status.Text = "Auto Rejoin: " .. i .. "s"
-            wait(1)
-        end
-        
+    while true do
         if enabled then
+            gui.status.Text = "Rejoining in 15 seconds..."
+            wait(15) -- Wait 15 seconds before rejoining
+            
             gui.status.Text = "Rejoining..."
             pcall(function()
-                if game.JobId and #game.JobId > 0 then
-                    TeleportService:TeleportToPlaceInstance(targetPlaceId, game.JobId, Players.LocalPlayer)
-                else
-                    TeleportService:Teleport(targetPlaceId, Players.LocalPlayer)
-                end
+                TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
             end)
-            wait(5)
+            
+            -- Auto-restart after teleportation
+            wait(10)  -- Wait for rejoining
+            if syn then
+                syn.queue_on_teleport([[
+                    wait(10)
+                    loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+                ]])
+            elseif queue_on_teleport then
+                queue_on_teleport([[
+                    wait(10)
+                    loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
+                ]])
+            end
         end
+        wait(1)  -- Small delay before the next check to avoid blocking the script
     end
 end
 
--- Auto-restart on rejoin
-if syn then
-    syn.queue_on_teleport([[
-        wait(10)
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-    ]])
-elseif queue_on_teleport then
-    queue_on_teleport([[
-        wait(10)
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/safsafwqe/auto_rejoin/main/auto_rejoin.lua'))()
-    ]])
-end
-
--- Start the auto-rejoin
+-- Start the auto-rejoin process
 startAutoRejoin()
